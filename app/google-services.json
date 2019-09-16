@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "653280236060",
+    "firebase_url": "https://thuli001.firebaseio.com",
+    "project_id": "thuli001",
+    "storage_bucket": "thuli001.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:653280236060:android:fea45847e10f17153f45d9",
+        "android_client_info": {
+          "package_name": "com.example.thuli001"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "653280236060-t7dq38gch2mj2ut1gv6t6f9m47j2idsf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.thuli001",
+            "certificate_hash": "32cae2858067256abcada48714c5d6adf86a3d16"
+          }
+        },
+        {
+          "client_id": "653280236060-s5cho8sopbh15gf1oao8chilpkfcd3n5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAVUwteGq_CbNqjhY5R-LwHQLXQ0JmKEuI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "653280236060-s5cho8sopbh15gf1oao8chilpkfcd3n5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
