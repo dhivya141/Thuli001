@@ -14,12 +14,12 @@ tools:context=".SignUp">
     android:orientation="vertical">
 
     <TextView
+        android:id="@+id/signup_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="30dp"
         android:text="Sign Up"
-        android:id="@+id/signup"
         android:textColor="#544c4a"
         android:textSize="30sp"
         android:textStyle="bold" />
@@ -34,7 +34,7 @@ tools:context=".SignUp">
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/tname"
+            android:id="@+id/name_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -42,7 +42,7 @@ tools:context=".SignUp">
             android:textSize="20sp" />
 
         <EditText
-            android:id="@+id/ename"
+            android:id="@+id/name_field"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:hint="Enter Your Full Name"
@@ -58,7 +58,7 @@ tools:context=".SignUp">
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/tcontact"
+            android:id="@+id/contact_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -66,7 +66,7 @@ tools:context=".SignUp">
             android:textSize="20sp" />
 
         <EditText
-            android:id="@+id/econtact"
+            android:id="@+id/contact_field"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:hint="Enter your Contact Number"
@@ -81,7 +81,7 @@ tools:context=".SignUp">
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/taddr"
+            android:id="@+id/address_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -89,7 +89,7 @@ tools:context=".SignUp">
             android:textSize="20sp" />
 
         <EditText
-            android:id="@+id/eaddr"
+            android:id="@+id/address_field"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:hint="Enter your Address"
@@ -134,28 +134,14 @@ tools:context=".SignUp">
 
         <Button
             android:layout_width="wrap_content"
-            android:id="@+id/buttonnext"
+            android:id="@+id/next_button"
             android:layout_height="wrap_content"
             android:alpha="0.5"
             android:gravity="center"
             android:text="Next" />
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="30dp">
 
-
-        <TextView
-            android:id="@+id/log"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:autoLink="all"
-            android:paddingLeft="8dp"
-            android:text="Already registered? Login" />
-    </LinearLayout>
 
 </LinearLayout>
 

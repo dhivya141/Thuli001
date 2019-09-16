@@ -1,6 +1,7 @@
 package com.example.thuli001;
 
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -10,48 +11,54 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserInfo;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 public class SignUp extends AppCompatActivity implements View.OnClickListener {
-    TextView regn;
-    TextView fn;
-    EditText fname;
+    public EditText mNameField;
+    public EditText mContactField;
+    public EditText mAddressField;
+    public Spinner mSpinner;
+    Button mNextButton;
+    DatabaseReference mDatabase;
+    FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
 
-    TextView contact;
-    EditText ctno;
-    TextView addr;
-    EditText address;
-    TextView locn;
-    Spinner spin;
-    Button next;
-    TextView already;
-
-    String[] area = {"Kodambakkam", "Anna Nagar", "Adyar", "Gopalapuram", "Guindy"};
-    ArrayAdapter aa;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
-        regn = (TextView) findViewById(R.id.signup);
-        fn = (TextView) findViewById(R.id.tname);
-        fname = (EditText) findViewById(R.id.ename);
+        mAuth = FirebaseAuth.getInstance();
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        mNameField = (EditText) findViewById(R.id.name_field);
+        mContactField = (EditText) findViewById(R.id.contact_field);
+        mAddressField = (EditText) findViewById(R.id.address_field);
 
-        contact = (TextView) findViewById(R.id.tcontact);
-        ctno = (EditText) findViewById(R.id.econtact);
-        addr = (TextView) findViewById(R.id.taddr);
-        address = (EditText) findViewById(R.id.eaddr);
-        locn = (TextView) findViewById(R.id.location);
-        spin = (Spinner) findViewById(R.id.spinner);
-        next = (Button) findViewById(R.id.buttonnext);
-        already = (TextView) findViewById(R.id.log);
-
-        aa = new ArrayAdapter(this, android.R.layout.simple_spinner_item, area);
-        spin.setAdapter(aa);
-        spin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        Spinner spinner = (Spinner) findViewById(R.id.spinner);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.location_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
@@ -62,40 +69,54 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
 
             }
         });
-        next.setOnClickListener(this);
-        already.setOnClickListener(this);
-    }
-    private void submit(){
-        if(fname.getText().toString().isEmpty())
-        {
-            Toast.makeText(this, "Name not entered!", Toast.LENGTH_LONG).show();
-        }
 
-        else if(ctno.getText().toString().isEmpty())
-        {
-            Toast.makeText(this, "Contact number not entered!", Toast.LENGTH_LONG).show();
-        }
-        else if(address.getText().toString().isEmpty()){
-            Toast.makeText(this, "Address not entered!", Toast.LENGTH_LONG).show();
-        }
-        else {
-            Toast.makeText(this, "Complete the Sign Up!", Toast.LENGTH_SHORT).show();
-            Intent intent =new Intent(SignUp.this,SignUp2.class );
-            startActivity(intent);
-            finish();
+        mNextButton = (Button) findViewById(R.id.next_button);
+        mNextButton.setOnClickListener(this);
+
+    }
+    private void Next(){
+        String name=mNameField.getText().toString().trim();
+        String phno=mContactField.getText().toString().trim();
+        String address=mAddressField.getText().toString().trim();
+        String location = mSpinner.getSelectedItem().toString();
+        if(name.isEmpty())
+        {   mNameField.setError("Enter Name");
+            mNameField.requestFocus();
+        } else if(phno.isEmpty())
+        {   mContactField.setError("Enter Contact");
+            mContactField.requestFocus();
+        } else if(address.isEmpty()) {
+            mAddressField.setError("Enter Address");
+            mAddressField.requestFocus();
+        } else {
+            HashMap<String, String> dataMap=new HashMap<String, String>();
+            dataMap.put("Name", name);
+            dataMap.put("Phone", phno);
+            dataMap.put("Address", address);
+            dataMap.put("Location", location);
+            mDatabase.push().setValue(dataMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if(task.isSuccessful()){
+                        Intent I = new Intent(SignUp.this, MainActivity.class);
+                        startActivity(I);
+                        finish();
+                    }
+                    else{
+                        Toast.makeText(SignUp.this,"Error", Toast.LENGTH_LONG).show();
+                    }
+                }
+            });
+
         }
     }
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.buttonnext:
-                submit();
+            case R.id.next_button: {
+                Next();
                 break;
-            case  R.id.log:
-                Intent intent =new Intent(SignUp.this,Login.class );
-                startActivity(intent);
-                finish();
-                break;
+            }
 
         }
     }
