@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,7 +26,6 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     private Button mLoginButton;
     private TextView mSignupLink;
     private TextView mForgotPassword;
-    private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
 
@@ -47,7 +45,6 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         mLoginButton.setOnClickListener(this);
 
         mAuth = FirebaseAuth.getInstance();
-        mDatabase = FirebaseDatabase.getInstance().getReference();
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -96,7 +93,6 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
            }
            else{
                Toast.makeText(Login.this, "Verify email", Toast.LENGTH_SHORT).show();
-               mAuth.signOut();
            }
        }
     @Override
@@ -108,7 +104,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 
             case R.id.signup_link:
                 finish();
-                startActivity(new Intent(Login.this, SignUp2.class));
+                startActivity(new Intent(Login.this, SignUp.class));
                 break;
             case R.id.forgot_password:
                 finish();

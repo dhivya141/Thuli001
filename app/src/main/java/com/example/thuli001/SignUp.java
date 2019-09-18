@@ -7,8 +7,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -17,28 +15,28 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserInfo;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 public class SignUp extends AppCompatActivity implements View.OnClickListener {
+
     public EditText mNameField;
     public EditText mContactField;
     public EditText mAddressField;
     public Spinner mSpinner;
-    Button mNextButton;
+    private EditText mEmailField;
+    private EditText mPasswordField;
+    private EditText mPasswordconfirmField;
+    private Button mSignupButton;
+    private TextView mLoginLink;
+
     DatabaseReference mDatabase;
-    FirebaseAuth mAuth;
+    private FirebaseAuth mAuth;
+
+    String username, userphno, useraddress, userlocation, useremail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,72 +50,108 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
         mNameField = (EditText) findViewById(R.id.name_field);
         mContactField = (EditText) findViewById(R.id.contact_field);
         mAddressField = (EditText) findViewById(R.id.address_field);
-        Spinner spinner = (Spinner) findViewById(R.id.spinner);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.location_array, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
-            }
+        mEmailField = (EditText) findViewById(R.id.email_field);
+        mPasswordField = (EditText) findViewById(R.id.password_field);
+        mPasswordconfirmField = (EditText) findViewById(R.id.passwordconfirm_field);
+        mSignupButton = (Button) findViewById(R.id.signup_button);
+        mLoginLink = (TextView) findViewById(R.id.signup_link);
 
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
-
-        mNextButton = (Button) findViewById(R.id.next_button);
-        mNextButton.setOnClickListener(this);
-
+        mLoginLink.setOnClickListener(this);
+        mSignupButton.setOnClickListener(this);
     }
-    private void Next(){
-        String name=mNameField.getText().toString().trim();
-        String phno=mContactField.getText().toString().trim();
-        String address=mAddressField.getText().toString().trim();
-        String location = mSpinner.getSelectedItem().toString();
-        if(name.isEmpty())
+    private void Sign(){
+
+        username=mNameField.getText().toString().trim();
+        userphno=mContactField.getText().toString().trim();
+        useraddress=mAddressField.getText().toString().trim();
+
+        useremail = mEmailField.getText().toString().trim();
+        String password = mPasswordField.getText().toString();
+        String cpassword = mPasswordconfirmField.getText().toString();
+
+        if(username.isEmpty())
         {   mNameField.setError("Enter Name");
             mNameField.requestFocus();
-        } else if(phno.isEmpty())
+        } else if(userphno.isEmpty())
         {   mContactField.setError("Enter Contact");
             mContactField.requestFocus();
-        } else if(address.isEmpty()) {
+        } else if(useraddress.isEmpty()) {
             mAddressField.setError("Enter Address");
             mAddressField.requestFocus();
-        } else {
-            HashMap<String, String> dataMap=new HashMap<String, String>();
-            dataMap.put("Name", name);
-            dataMap.put("Phone", phno);
-            dataMap.put("Address", address);
-            dataMap.put("Location", location);
-            mDatabase.push().setValue(dataMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+        }
+        else if(useremail.isEmpty()) {
+            mEmailField.setError("Enter Email");
+            mEmailField.requestFocus();
+        }
+        else if(password.isEmpty()) {
+            mPasswordField.setError("Enter Password");
+            mPasswordField.requestFocus();
+        }
+        else if(cpassword.isEmpty()){
+            mPasswordField.setError("Enter Password Confirmation");
+            mPasswordField.requestFocus();
+        }
+        else if(password.equals(cpassword)){
+            mAuth.createUserWithEmailAndPassword(useremail, password).addOnCompleteListener(SignUp.this, new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                    if (task.isSuccessful()) {
+                        sendEmailVerification();
+                    } else {
+                        Toast.makeText(SignUp.this, "Not successful", Toast.LENGTH_SHORT).show();
+                    }
+
+                }
+            });
+        }
+        else {
+            Toast.makeText(this, "Password not matching!", Toast.LENGTH_LONG).show();
+        }
+    }
+    private void sendEmailVerification()
+    {
+        FirebaseUser firebaseUser = mAuth.getInstance().getCurrentUser();
+        if(firebaseUser!=null) {
+            firebaseUser.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
-                    if(task.isSuccessful()){
-                        Intent I = new Intent(SignUp.this, MainActivity.class);
-                        startActivity(I);
+                    if (task.isSuccessful()) {
+                        sendUserData();
+                        Toast.makeText(SignUp.this, "Successfully verified ", Toast.LENGTH_SHORT).show();
                         finish();
-                    }
-                    else{
-                        Toast.makeText(SignUp.this,"Error", Toast.LENGTH_LONG).show();
+                        startActivity(new Intent(SignUp.this, MainActivity.class));
+
                     }
                 }
             });
-
+        }
+        else{
+            Toast.makeText(SignUp.this, "Verify email", Toast.LENGTH_SHORT).show();
         }
     }
+
+    private void sendUserData(){
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference myRef= firebaseDatabase.getReference(mAuth.getUid());
+        UserProfile userprofile = new UserProfile(username, userphno, useraddress, useremail);
+        myRef.setValue(userprofile);
+    }
+
+
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.next_button: {
-                Next();
+        switch (v.getId()) {
+            case R.id.signup_button:
+                Sign();
                 break;
+            case R.id.signup_link:{
+                Intent I = new Intent(SignUp.this, Login.class);
+                startActivity(I);
+                finish();
             }
-
         }
+
     }
 }
 
