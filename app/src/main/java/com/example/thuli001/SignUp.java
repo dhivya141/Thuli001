@@ -39,7 +39,6 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
     Button mNextButton;
     DatabaseReference mDatabase;
     FirebaseAuth mAuth;
-    private FirebaseAuth.AuthStateListener mAuthListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,10 +48,10 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
 
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
+
         mNameField = (EditText) findViewById(R.id.name_field);
         mContactField = (EditText) findViewById(R.id.contact_field);
         mAddressField = (EditText) findViewById(R.id.address_field);
-
         Spinner spinner = (Spinner) findViewById(R.id.spinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.location_array, android.R.layout.simple_spinner_item);

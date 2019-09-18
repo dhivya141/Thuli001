@@ -8,7 +8,6 @@
 
     <LinearLayout
         android:orientation="vertical"
-        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".MainActivity">
@@ -27,6 +26,107 @@
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:weightSum="9">
+
+
+            <LinearLayout
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="30dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/name_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="Full Name"
+                    android:textSize="20sp" />
+
+                <EditText
+                    android:id="@+id/name_field"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="Enter Your Full Name"
+                    android:inputType="text" />
+            </LinearLayout>
+
+
+            <LinearLayout
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/contact_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="Contact Number"
+                    android:textSize="20sp" />
+
+                <EditText
+                    android:id="@+id/contact_field"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="Enter your Contact Number"
+                    android:inputType="phone" />
+            </LinearLayout>
+
+            <LinearLayout
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/address_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="Address"
+                    android:textSize="20sp" />
+
+                <EditText
+                    android:id="@+id/address_field"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="Enter your Address"
+                    android:inputType="textLongMessage" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_marginLeft="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <TextView
+
+                    android:id="@+id/location"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Location"
+                    android:textSize="20sp" />
+                <Spinner
+                    android:id="@+id/spinner"
+                    android:layout_width="0dp"
+                    android:gravity="center"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+
+                    />
+
+
+
+            </LinearLayout>
+
 
             <LinearLayout
 
@@ -128,7 +228,7 @@
 
 
                 <TextView
-                    android:id="@+id/login_link"
+                    android:id="@+id/signup_link"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:autoLink="all"

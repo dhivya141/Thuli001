@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -20,11 +22,13 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class Login extends AppCompatActivity implements View.OnClickListener {
 
-    public EditText mEmailField;
-    public EditText mPasswordField;
-    Button mLoginButton;
-    DatabaseReference mDatabase;
-    FirebaseAuth mAuth;
+    private EditText mEmailField;
+    private EditText mPasswordField;
+    private Button mLoginButton;
+    private TextView mSignupLink;
+    private TextView mForgotPassword;
+    private DatabaseReference mDatabase;
+    private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
 
     @Override
@@ -35,28 +39,31 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         mEmailField = (EditText) findViewById(R.id.email_field);
         mPasswordField = (EditText) findViewById(R.id.password_field);
         mLoginButton = (Button) findViewById(R.id.login_button);
+        mSignupLink = (TextView) findViewById(R.id.signup_link);
+        mForgotPassword=(TextView) findViewById(R.id.forgot_password);
+
+        mSignupLink.setOnClickListener(this);
+        mForgotPassword.setOnClickListener(this);
+        mLoginButton.setOnClickListener(this);
+
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
-
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = mAuth.getCurrentUser();
                 if (user != null) {
-                    Toast.makeText(Login.this, "User logged in ", Toast.LENGTH_SHORT).show();
-                    Intent I = new Intent(Login.this, MainActivity.class);
-                    startActivity(I);
                     finish();
+                    Toast.makeText(Login.this, "User connected ", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(Login.this, MainActivity.class));
                 } else {
                     Toast.makeText(Login.this, "Login to continue", Toast.LENGTH_SHORT).show();
                 }
             }
         };
-
-        mLoginButton.setOnClickListener(this);
-
     }
-       private void login() {
+
+        private void login() {
            String userEmail = mEmailField.getText().toString();
            String userPaswd = mPasswordField.getText().toString();
            if (userEmail.isEmpty()) {
@@ -70,9 +77,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                    @Override
                    public void onComplete(@NonNull Task<AuthResult> task) {
                        if (task.isSuccessful()) {
-                           Intent I = new Intent(Login.this, MainActivity.class);
-                           startActivity(I);
-                           finish();
+                           checkEmailVerification();
 
                        } else {
                            Toast.makeText(Login.this, "Not successful", Toast.LENGTH_SHORT).show();
@@ -81,17 +86,39 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                });
            }
        }
+       private void checkEmailVerification()
+       {
+           FirebaseUser firebaseUser = mAuth.getInstance().getCurrentUser();
+           Boolean emailflag=firebaseUser.isEmailVerified();
+           if(emailflag==true){
+               finish();
+               startActivity(new Intent(Login.this, MainActivity.class));
+           }
+           else{
+               Toast.makeText(Login.this, "Verify email", Toast.LENGTH_SHORT).show();
+               mAuth.signOut();
+           }
+       }
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.login_button:
                 login();
+                break;
+
+            case R.id.signup_link:
+                finish();
+                startActivity(new Intent(Login.this, SignUp2.class));
+                break;
+            case R.id.forgot_password:
+                finish();
+                startActivity(new Intent(Login.this, PasswordReset.class));
                 break;
 
         }
     }
     @Override
-    protected void onStart() {
+    protected void onStart(){
         super.onStart();
         mAuth.addAuthStateListener(mAuthListener);
     }
