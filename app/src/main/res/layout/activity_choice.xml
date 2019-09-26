@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".choice">
+<TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_centerHorizontal="true"
+    android:text="I am a"
+    android:id="@+id/iama"
+    android:layout_marginTop="250dp"
+    android:textSize="50dp"/>
+<RadioGroup
+    android:layout_centerHorizontal="true"
+    android:layout_below="@id/iama"
+    android:layout_width="wrap_content"
+    android:id="@+id/rgrp"
+    android:layout_height="wrap_content">
+    <RadioButton
+        android:id="@+id/radio_user"
+        android:textSize="30dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="User"/>
+    <RadioButton
+        android:id="@+id/radio_contr"
+        android:textSize="30dp"
+        android:text="Contractor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+</RadioGroup>
+  
+</RelativeLayout>
